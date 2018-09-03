@@ -1,19 +1,18 @@
-# Math
-import math
-import numpy as np
-
 # Plot
 import matplotlib
 import matplotlib.pyplot as plt
-%matplotlib inline
 
 # GIF
 from moviepy.editor import VideoClip
 from moviepy.video.io.bindings import mplfig_to_npimage
 
-# PLOTS
-global size_time_serie
-size_time_serie = float(45)
+from tools import
+
+# Jupyter
+%matplotlib inline
+
+# Option to write gif
+write_gif = False
 
 # Instanciate figure
 fig = plt.figure(figsize=(9, 6))
@@ -23,15 +22,17 @@ alignement = 0.1
 
 # Classic plot
 ax_carthesian = fig.add_axes([alignement, 0.4, size, size])
-
 # Polar plot
 ax_polar = fig.add_axes([alignement + size, 0.4, size, size], polar=True)
-
 # Patchwork
-ax_carthesian_2 = fig.add_axes([alignement + 1.8*size, 0.4, size, size])
+ax_patchwork = fig.add_axes([alignement + 1.8*size, 0.4, size, size])
 
 # Global iteration
 iteration = 0
+
+# PLOTS
+global size_time_serie
+size_time_serie = float(45)
 
 def make_frame(time):
     # Timesteps
@@ -60,7 +61,7 @@ def make_frame(time):
     # Clear plot
     ax_carthesian.clear()
     ax_polar.clear()
-    ax_carthesian_2.clear()
+    ax_patchwork.clear()
 
     # Original Time series
     ax_carthesian.plot(t, scaled_time_serie)
@@ -75,16 +76,22 @@ def make_frame(time):
     ax_polar.grid(True)
 
     # Gramian Angular Field
-    ax_carthesian_2.matshow(gaf)
-    ax_carthesian_2.set_title("Gramian Angular Field", fontdict=font)
-    ax_carthesian_2.set_yticklabels([])
-    ax_carthesian_2.set_xticklabels([])
+    ax_patchwork.matshow(gaf)
+    ax_patchwork.set_title("Gramian Angular Field", fontdict=font)
+    ax_patchwork.set_yticklabels([])
+    ax_patchwork.set_xticklabels([])
 
     iteration = iteration + 1
 
     return mplfig_to_npimage(fig)
 
-# GIF: Write and visualise
-animation = VideoClip(make_frame, duration=2)
-# animation.write_gif("gramian_angulat_field.gif",fps=20)
-animation.ipython_display(fps=20, loop=True, autoplay=True)
+
+if __name__ == "__main__":
+
+    # GIF: Write and visualise
+    animation = VideoClip(make_frame, duration=2)
+
+    if(write_gif):
+        animation.write_gif("gramian_angulat_field.gif",fps=20)
+
+    animation.ipython_display(fps=20, loop=True, autoplay=True)
